@@ -13,7 +13,5 @@ class PartidoSpider(scrapy.Spider):
 
 	def parse(self, response):
 		estados_selector = '//div[@id="textoConteudo"]/p/select[@id="uf"]/option/text()'
-		selectors = iter(response.xpath(estados_selector).extract())
-		lista_uf = { 'estados' : dict(izip(selectors, selectors)) }
-
-		yield lista_uf
+		for uf in response.xpath(estados_selector).extract():
+			yield {'estado' : uf}

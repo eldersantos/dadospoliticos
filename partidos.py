@@ -4,8 +4,12 @@ import scrapy
 from scrapy.http import Request
 from itertools import izip
 import requests
+import json
 
 lista_partidos = {}
+
+class Partido(scrapy.Item):
+    partido = scrapy.Field(serializer=str)
 
 class PartidoSpider(scrapy.Spider):
 	name = 'partidobot'
@@ -13,9 +17,8 @@ class PartidoSpider(scrapy.Spider):
 
 	def parse(self, response):
 		partidos_selector = '//div[@id="textoConteudo"]/p/select[@id="partido"]/option/text()'
-		selectors = iter(response.xpath(partidos_selector).extract())
-		lista_partidos = { 'partidos' : dict(izip(selectors, selectors)) }
+		for par in response.xpath(partidos_selector).extract():
+			yield {'partido' : par}
 
-		yield lista_partidos
 
 
